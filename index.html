@@ -10,55 +10,139 @@
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(to right, #ffdde1, #ee9ca7);
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 20px;
-      box-sizing: border-box;
-      text-align: center;
+      overflow: hidden;
     }
+
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite ease-in-out alternate;
+    }
+
+    @keyframes twinkle {
+      from { opacity: 0.2; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.5); }
+    }
+
     .card {
+      position: relative;
+      z-index: 1;
       background: #fff;
       border-radius: 20px;
       padding: 40px;
       max-width: 600px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin: 10vh auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
     }
+
     h1 {
       font-family: 'Great Vibes', cursive;
       font-size: 48px;
       color: #e91e63;
       margin-bottom: 20px;
     }
+
+    h1::before {
+      content: \"💌 \";
+    }
+
     p {
       font-size: 18px;
       line-height: 1.6;
+      color: #333;
     }
+
     .emoji {
       font-size: 24px;
     }
+
     audio {
-      position: absolute;
+      position: fixed;
       bottom: 10px;
       left: 10px;
+      z-index: 2;
+    }
+
+    #secretBtn {
+      margin-top: 20px;
+      background-color: #e91e63;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #secretBtn:hover {
+      background-color: #c2185b;
+    }
+
+    #secretMsg {
+      opacity: 0;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #e91e63;
+      animation: fadeIn 1s ease forwards;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class=\"stars\" id=\"stars\"></div>
+
+  <div class=\"card\">
     <h1>Setahun Bersama Kamu</h1>
-    <p>Setahun bersamamu = 365 hari aku tahan godaan buat nggak nyebelin kamu terus <span class="emoji">😝</span></p>
+    <p>Setahun bersamamu = 365 hari aku tahan godaan buat nggak nyebelin kamu terus <span class=\"emoji\">😝</span></p>
     <p>Tapi serius deh, kamu itu hadiah paling ajaib yang Tuhan kasih.</p>
     <p>Meski kamu ngeselin, aku tetap milih kamu—setiap hari.</p>
-    <p>Cheers buat tahun pertama, dan semoga makin kuat ngadepin drama hidup (dan drama aku <span class="emoji">😂</span>).</p>
+    <p>Cheers buat tahun pertama, dan semoga makin kuat ngadepin drama hidup (dan drama aku <span class=\"emoji\">😂</span>).</p>
     <p><strong>Love you to the moon and balik lagi 💖</strong></p>
+
+    <button id=\"secretBtn\">Klik Aku!</button>
+    <p id=\"secretMsg\">Kamu tuh... rumah paling nyaman yang nggak pernah bikin aku nyasar. 🥺💗</p>
   </div>
 
   <audio autoplay loop controls>
-    <source src="https://files.catbox.moe/47jmpj.mp3" type="audio/mpeg">
+    <source src=\"https://files.catbox.moe/47jmpj.mp3\" type=\"audio/mpeg\">
     Browser kamu tidak mendukung pemutar musik.
   </audio>
+
+  <script>
+    const starContainer = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDuration = (1 + Math.random() * 2) + 's';
+      starContainer.appendChild(star);
+    }
+
+    const secretBtn = document.getElementById('secretBtn');
+    const secretMsg = document.getElementById('secretMsg');
+    secretBtn.addEventListener('click', () => {
+      secretMsg.style.display = 'block';
+    });
+  </script>
 </body>
 </html>
