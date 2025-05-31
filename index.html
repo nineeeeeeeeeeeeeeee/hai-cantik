@@ -3,21 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Setahun Bersama Kamu</title>
+  <title>Surprise Buat Kamu</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
-      animation: fadeInPage 1.5s ease-in;
-    }
-
-    @keyframes fadeInPage {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      transition: background 1s ease;
     }
 
     .stars {
@@ -26,6 +28,7 @@
       height: 100%;
       background: transparent;
       z-index: 0;
+      display: none;
     }
 
     .star {
@@ -42,16 +45,24 @@
       to { opacity: 1; transform: scale(1.5); }
     }
 
+    .container {
+      text-align: center;
+      z-index: 2;
+      transition: opacity 1s ease;
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+
     .card {
-      position: relative;
-      z-index: 1;
       background: #fff;
       border-radius: 20px;
       padding: 40px;
       max-width: 600px;
-      margin: 10vh auto;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      text-align: center;
     }
 
     h1 {
@@ -75,93 +86,89 @@
       font-size: 24px;
     }
 
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background-color: #c2185b;
+    }
+
     audio {
       position: fixed;
       bottom: 10px;
       left: 10px;
-      z-index: 2;
-    }
-
-    #secretBtn {
-      margin-top: 20px;
-      background-color: #e91e63;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    #secretBtn:hover {
-      background-color: #c2185b;
-    }
-
-    #secretMsg {
-      opacity: 0;
-      margin-top: 20px;
-      font-size: 16px;
-      color: #e91e63;
-      animation: fadeIn 1s ease forwards;
+      z-index: 3;
       display: none;
-    }
-
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-      }
     }
   </style>
 </head>
 <body>
+  <!-- Bintang -->
   <div class="stars" id="stars"></div>
 
-  <div class="card">
-    <h1>Setahun Bersama Kamu</h1>
-    <p>Setahun bersamamu = 365 hari aku tahan godaan buat nggak nyebelin kamu terus <span class="emoji">😝</span></p>
-    <p>Tapi serius deh, kamu itu hadiah paling ajaib yang Tuhan kasih.</p>
-    <p>Meski kamu ngeselin, aku tetap milih kamu—setiap hari.</p>
-    <p>Cheers buat tahun pertama, dan semoga makin kuat ngadepin drama hidup (dan drama aku <span class="emoji">😂</span>).</p>
-    <p><strong>Love you to the moon and balik lagi 💖</strong></p>
-
-    <button id="secretBtn">Klik Aku!</button>
-    <p id="secretMsg">Kamu tuh... rumah paling nyaman yang nggak pernah bikin aku nyasar. 🥺💗</p>
+  <!-- Halaman Awal -->
+  <div class="container" id="intro">
+    <button onclick="revealMessage()">Klik Aku!</button>
   </div>
 
-  <audio autoplay loop controls>
+  <!-- Pesan Romantis -->
+  <div class="container hidden" id="message">
+    <div class="card">
+      <h1>Setahun Bersama Kamu</h1>
+      <p>Setahun bersamamu = 365 hari aku tahan godaan buat nggak nyebelin kamu terus <span class="emoji">😝</span></p>
+      <p>Tapi serius deh, kamu itu hadiah paling ajaib yang Tuhan kasih.</p>
+      <p>Meski kamu ngeselin, aku tetap milih kamu—setiap hari.</p>
+      <p>Cheers buat tahun pertama, dan semoga makin kuat ngadepin drama hidup (dan drama aku <span class="emoji">😂</span>).</p>
+      <p><strong>Love you to the moon and balik lagi 💖</strong></p>
+    </div>
+  </div>
+
+  <!-- Musik -->
+  <audio id="romanticMusic" autoplay loop controls>
     <source src="https://files.catbox.moe/47jmpj.mp3" type="audio/mpeg">
     Browser kamu tidak mendukung pemutar musik.
   </audio>
 
-  <audio id="clickSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_d2e70be8e5.mp3?filename=pop-94319.mp3"></audio>
-
   <script>
-    // Bintang-bintang
-    const starContainer = document.getElementById('stars');
-    for (let i = 0; i < 100; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = Math.random() * 100 + '%';
-      star.style.animationDuration = (1 + Math.random() * 2) + 's';
-      starContainer.appendChild(star);
-    }
+    function revealMessage() {
+      // Ganti tampilan
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('message').classList.remove('hidden');
 
-    // Tombol rahasia
-    const secretBtn = document.getElementById('secretBtn');
-    const secretMsg = document.getElementById('secretMsg');
-    const clickSound = document.getElementById('clickSound');
+      // Tampilkan efek
+      const stars = document.getElementById('stars');
+      stars.style.display = 'block';
 
-    secretBtn.addEventListener('click', () => {
-      secretMsg.style.display = 'block';
-      clickSound.play();
+      // Tambahkan bintang
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDuration = (1 + Math.random() * 2) + 's';
+        stars.appendChild(star);
+      }
+
+      // Musik muncul
+      document.getElementById('romanticMusic').style.display = 'block';
+
+      // Confetti 🎉
       confetti({
-        particleCount: 150,
+        particleCount: 200,
         spread: 100,
         origin: { y: 0.6 }
       });
-    });
+    }
   </script>
 </body>
 </html>
